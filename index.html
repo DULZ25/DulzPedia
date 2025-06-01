@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Toko DulzPedia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      background-image: url('https://files.catbox.moe/iug1p5.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+      color: white;
+      text-shadow: 0 0 5px rgba(0,0,0,0.7);
+    }
+    .product {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.85);
+    }
+    .product-name {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .price {
+      color: green;
+      margin-top: 5px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #222;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Toko DulzPedia</h1>
+
+<div id="products"></div>
+
+<h2>Checkout</h2>
+<form id="checkoutForm">
+  <label for="productSelect">Pilih Produk</label>
+  <select id="productSelect" required></select>
+
+  <label for="buyerName">Nama Pembeli</label>
+  <input type="text" id="buyerName" required />
+
+  <label for="transferProof">Upload Bukti Transfer</label>
+  <input type="file" id="transferProof" accept=".jpg,.png,.pdf" required />
+
+  <div style="margin-top:15px; display:flex; flex-direction: column; gap:10px;">
+    <button onclick="copyText('089503384764')" type="button" style="background:#007bff;color:white;">Salin Nomor Dana</button>
+    <button onclick="window.open('https://wa.me/6283128823984?text=Halo, saya ingin scan QRIS', '_blank')" type="button" style="background:#ffc107;color:black;">Minta QR ke Owner</button>
+    <button onclick="window.open('https://https://whatsapp.com/channel/0029Vaq3VUN5Ejy5ZG5LJ30G', '_blank')" type="button" style="background:#25D366;color:white;">Gabung Channel WA</button>
+    <button onclick="window.open('https://wa.me/6283128823984?text=Halo, saya ingin tanya produk lainnya', '_blank')" type="button" style="background:#6f42c1;color:white;">Produk Lainnya? Chat Owner</button>
+  </div>
+
+  <button type="submit" style="background:#28a745;color:white; margin-top:15px;">Kirim Order</button>
+</form>
+
+<button type="submit">Kirim ke WhatsApp</button>
+    </form>
+  </div>
+
+  const products = [
+    { name: "Panel 2Gb", price: "3.000" },
+    { name: "Panel 4Gb", price: "5.000" },
+    { name: "Panel 6Gb", price: "7.000" },
+    { name: "Panel 8Gb", price: "9.000" },
+    { name: "Panel Unli", price: "10.000" },
+    { name: "Reseller Panel", price: "15.000" }, 
+    { name: "Admin Panel", price: "20.000" },
+    { name: "Owner Panel", price: " 30.000" }, 
+    { name: "Jasa Pembuatan Website Toko Online", price: "15.000" },
+    { name: "Jasa Pembuatan Website Top Up", price: "25.000" },
+    { name: "Jasa Pembuatan Website All Payment", price: "15.000" },
+    { name: "Bot Pushkontak", price: "20.000" },
+    { name: "Bot Jaga Grup", price: "35.000" },
+    { name: "Murnok", price: "10.000" },
+    { name: "Mursun", price: "20.000" },
+    { name: "Murbug", price: " 20.000" }, 
+    { name: "Murweb", price: " 20.000" }, 
+    { name: "Produk lainnya? Chat Owner", price: "-" }
+  ];
+
+  const productSelect = document.getElementById('productSelect');
+  const productsDiv = document.getElementById('products');
+  const checkoutForm = document.getElementById('checkoutForm');
+  const transferProof = document.getElementById('transferProof');
+
+  function renderProducts() {
+    productsDiv.innerHTML = '';
+    products.forEach(p => {
+      productsDiv.innerHTML += `<div class="product">
+        <div class="product-name">${p.name}</div>
+        <div class="price">Harga: Rp ${p.price}</div>
+      </div>`;
+    });
+  }
+
+  function fillProductSelect() {
+    productSelect.innerHTML = '<option value="">-- Pilih Produk --</option>';
+    products.forEach((p, i) => {
+      productSelect.innerHTML += `<option value="${i}">${p.name} - Rp ${p.price}</option>`;
+    });
+  }
+
+  checkoutForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const productIndex = productSelect.value;
+    const buyerName = document.getElementById('buyerName').value.trim();
+    const file = transferProof.files[0];
+
+    if (productIndex === '' || !buyerName || !file) {
+      alert('Lengkapi semua data!');
+      return;
+    }
+
+    const product = products[productIndex];
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const orderDate = new Date();
+      const time = orderDate.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+
+      const message = `
+📦Pesanan Sukses
+
+👤 Nama: ${buyerName}
+🛒 Produk: ${product.name}
+💰 Harga: Rp ${product.price}
+🕒 Waktu: ${time}
+
+© DulzPedia`;
+
+      fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chat_id: telegramChatId,
+          text: message,
+          reply_markup: {
+            inline_keyboard: [[
+              { text: "✅ Transaksi Telah Di Selesaikan", callback_data: "transaksi_selesai" }
+            ]]
+          }
+        })
+      });
+
+      alert('Order berhasil dikirim!');
+      checkoutForm.reset();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Nomor Dana disalin: " + text);
+    });
+  }
+
+  renderProducts();
+  fillProductSelect();
+</script>
+
+</body>
+  </html>
